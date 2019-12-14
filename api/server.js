@@ -16,7 +16,7 @@ const sessionConfig = {
     secret: "backendisthesecret",
 
     cookie: {
-        maxAge: 1000 * 60,
+        maxAge: 1000 * 300,
         secure: false,
         httpOnly: true,
     },
