@@ -4,5 +4,10 @@
 */
 
 module.exports = (req, res, next) => {
-  res.status(401).json({ you: 'shall not pass!' });
+  console.log(req.session);
+  if (req.session && req.session.username) {
+    next();
+  } else {
+      res.status(401).json({ you: "shall not pass!" });
+  }
 };
