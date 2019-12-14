@@ -4,16 +4,30 @@ const server = require("../api/server");
 const db = require("../database/dbConfig");
 const bcrypt = require("bcryptjs");
 
+
+ describe("GET /", () => {
+   it("should return 200 OK", async () => {
+     const res = await request(server).get("/");
+     expect(res.status).toBe(200);
+   });
+
+   // does it return the right data type?
+   it("should be json", async () => {
+     const res = await request(server).get("/");
+     expect(res.type).toBe("application/json");
+   });
+
+   // does it return the right data?
+   it("should return the right object", async () => {
+     const res = await request(server).get("/");
+     expect(res.body).toEqual({ api: "This is working" });
+   });
+ });
+
 describe("server", () => {
   beforeEach(async () => {
     await db("users").truncate();
   });
-
-  describe('GET /', () => {
-        it('should return 200 OK', async () => {
-            const res = await request(server).get('/');
-            expect(res.status).toBe(200);
-        });
 
   it("should set db environment to testing", function() {
     expect(process.env.DB_ENV).toBe("testing");
