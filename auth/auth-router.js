@@ -1,7 +1,9 @@
 const router = require('express').Router();
 const Users = require("./auth-model.js");
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
+const secrets = require('../config/secrets');
 
 router.post('/register', (req, res) => {
   // implement registration
@@ -11,6 +13,7 @@ router.post('/register', (req, res) => {
     res.status(404).json({ message: "Please enter username and password" });
   }
 
+  if (user.username && user.password) {
   const hash = bcrypt.hashSync(user.password, 12);
 
   user.password = hash;
@@ -18,11 +21,14 @@ router.post('/register', (req, res) => {
   Users.add(user)
     .then(saved => {
       const token = genToken(saved)
-      res.status(201).json({created_new_user: saved, token: token});
+      res.status(201).json({created_new_user: saved});
     })
     .catch(err => {
       res.status(500).json({message: "Error crating user", err});
-    });
+    })
+  } else {
+    res.status(400).json({message: "You shall not pass"})
+  }
 });
 
 router.post('/login', (req, res) => {
@@ -39,8 +45,9 @@ router.post('/login', (req, res) => {
     .first()
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
-        req.session.user = user;
-        res.status(201).json({ message: "Logged in", token: user.id });
+          const token = genToken(user);
+
+        res.status(201).json({ message: "Logged in", token: token});
       } else {
         res.status(404).json({ message: "Cannot find username or password!" });
       }
