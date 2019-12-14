@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Users = require("./auth-model.js");
+const bcrypt = require('bcryptjs');
 
 
 router.post('/register', (req, res) => {
@@ -34,7 +35,7 @@ router.post('/login', (req, res) => {
   Users.findBy({ username })
     .first()
     .then(user => {
-      if (username && bcrypt.compareSync(password, user.password)) {
+      if (user && bcrypt.compareSync(password, user.password)) {
         req.session.user = user;
         res.status(201).json({ message: "Logged in", token: user.id });
       } else {
@@ -47,26 +48,26 @@ router.post('/login', (req, res) => {
     });
 });
 
-function authorize(req, res, next) {
-  const username = req.body["username"];
-  const password = req.body["password"];
+// function authorize(req, res, next) {
+//   const username = req.body["username"];
+//   const password = req.body["password"];
 
-  if (!username || !password) {
-    res.status(401).json({ message: "Invalid username or password" });
-  }
+//   if (!username || !password) {
+//     res.status(401).json({ message: "Invalid username or password" });
+//   }
 
-  Users.findBy({ username })
-    .first()
-    .then(user => {
-      if (username && bcrypt.compareSync(password, user.password)) {
-        next();
-      } else {
-        res.status(404).json({ message: "No user located!" });
-      }
-    })
-    .catch(err => {
-      res.status(500).json(err);
-    });
-}
+//   Users.findBy({ username })
+//     .first()
+//     .then(user => {
+//       if (username && bcrypt.compareSync(password, user.password)) {
+//         next();
+//       } else {
+//         res.status(404).json({ message: "No user located!" });
+//       }
+//     })
+//     .catch(err => {
+//       res.status(500).json(err);
+//     });
+// }
 
 module.exports = router;

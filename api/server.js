@@ -1,5 +1,5 @@
 const express = require('express');
-const session = require('express-session');
+// const session = require('express-session');
 
 
 const cors = require('cors');
@@ -11,26 +11,28 @@ const jokesRouter = require('../jokes/jokes-router.js');
 
 const server = express();
 
-const sessionConfig = {
-    name: 'lizdoyle',
-    secret: "backendisthesecret",
-
-    cookie: {
-        maxAge: 1000 * 300,
-        secure: false,
-        httpOnly: true,
-    },
-
-    resave: false,
-    saveUninitialized: false
-};
 
 
+// const sessionConfig = {
+//     name: 'lizdoyle',
+//     secret: "backendisthesecret",
+
+//     cookie: {
+//         maxAge: 1000 * 300,
+//         secure: false,
+//         httpOnly: true,
+//     },
+
+//     resave: false,
+//     saveUninitialized: false
+// };
+
+//taking out sessions & cookie to run with token
 server.use(helmet());
 server.use(cors());
 server.use(express.json());
 
-server.use(session(sessionConfig));
+// server.use(session(sessionConfig));
 
 server.use('/api/auth', authRouter);
 server.use('/api/jokes', authenticate, jokesRouter);
