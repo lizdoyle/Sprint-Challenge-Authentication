@@ -9,6 +9,12 @@ describe("server", () => {
     await db("users").truncate();
   });
 
+  describe('GET /', () => {
+        it('should return 200 OK', async () => {
+            const res = await request(server).get('/');
+            expect(res.status).toBe(200);
+        });
+
   it("should set db environment to testing", function() {
     expect(process.env.DB_ENV).toBe("testing");
   });
@@ -27,7 +33,7 @@ describe("server", () => {
     });
 
     it("should return 200 status", async () => {
-      const password = bcrypt.hashSync("password", 12);
+      const password = bcrypt.hashSync("password", 12)
       await db("users").insert([{ username: "lizdoyle", password: password }]);
       const res = await request(server)
         .post("/api/auth/login")
