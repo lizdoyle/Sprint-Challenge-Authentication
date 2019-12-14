@@ -12,13 +12,16 @@ router.post('/register', (req, res) => {
   }
 
   const hash = bcrypt.hashSync(user.password, 12);
+
   user.password = hash;
+
   Users.add(user)
     .then(saved => {
-      res.status(201).json(saved);
+      const token = genToken(saved)
+      res.status(201).json({created_new_user: saved, token: token});
     })
     .catch(err => {
-      res.status(500).json(err);
+      res.status(500).json({message: "Error crating user", err});
     });
 });
 
@@ -47,6 +50,21 @@ router.post('/login', (req, res) => {
       res.status(500).json(err);
     });
 });
+
+function genToken(user) {
+
+  const payload = {
+    userId: user.id,
+    username: user.username
+  };
+
+  const options = { expiresIn: "1hr" };
+  const token = jwt.sign(payload, secret.jwtSecret, options);
+
+  return token;
+
+
+}
 
 // function authorize(req, res, next) {
 //   const username = req.body["username"];
