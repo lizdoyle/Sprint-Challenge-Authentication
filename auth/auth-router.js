@@ -6,6 +6,29 @@ const secrets = require('../config/secrets');
 
 const Users = require("./auth-model.js");
 
+router.get('/register', (req, res) => {
+  Users.find()
+    .then(users => {
+      res.status(200).json(users)
+    })
+    .catch(err => {
+      res.status(500).json(err)
+    })
+})
+
+
+router.get("/login", (req, res) => {
+  Users.find()
+    .then(users => {
+      res.status(200).json(users);
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
+
+
+
 router.post('/register', (req, res) => {
   // implement registration
   let user = req.body;
@@ -25,12 +48,14 @@ router.post('/register', (req, res) => {
        res.status(201).json({created_new_user: saved, token: token});
     })
     .catch(err => {
-      res.status(500).json({message: "Error crating user", err});
+      res.status(500).json({message: "Error crating user"});
     })
   } else {
      res.status(400).json({message: "You shall not pass"})
   }
 });
+
+
 
 router.post('/login', (req, res) => {
   // implement login

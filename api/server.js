@@ -18,4 +18,5 @@ server.get('/', (req, res) => {
     res.json({api: "This is working!"})
 });
 
+
 module.exports = server;
