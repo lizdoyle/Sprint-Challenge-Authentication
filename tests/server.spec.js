@@ -73,17 +73,17 @@ describe("server", () => {
       expect(res.body.message).toBe("Cannot find username or password!");
     });
 
-    it("should return 200 status", async () => {
-      const password = bcrypt.hashSync("password", 12)
-      await db("users").insert([{ username: "lizdoyle", password: "test"}]);
+    it("should return 201 status", async () => {
+      const password = bcrypt.hashSync("pass", 12)
+      await db("users").insert([{ username: "lizdoyle", password}]);
       const res = await request(server)
         .post("/api/auth/login")
         .send({
           username: "lizdoyle",
-          password: "test"
+          password: "pass"
         })
         .set("Content-Type", "application/json");
-      expect(res.status).toBe(200);
+      expect(res.status).toBe(201);
     }, 10000);
   });
 

@@ -45,7 +45,7 @@ router.post('/register', (req, res) => {
   Users.add(user)
     .then(saved => {
       const token = genToken(saved)
-       res.status(201).json({created_new_user: saved, token: token});
+       res.status(201).json({created_new_user: saved, token});
     })
     .catch(err => {
       res.status(500).json({message: "Error crating user"});
@@ -73,7 +73,7 @@ router.post('/login', (req, res) => {
       if (user && bcrypt.compareSync(password, user.password)) {
           const token = genToken(user);
 
-         res.status(201).json({ message: "Logged in", token: token});
+         res.status(201).json({ message: "Logged in", token});
       } else {
           res.status(404).json({ message: "Cannot find username or password!" });
       }
