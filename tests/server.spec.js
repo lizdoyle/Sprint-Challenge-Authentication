@@ -33,33 +33,6 @@ describe("server", () => {
     expect(process.env.DB_ENV).toBe("testing");
   });
 
-  describe("POST /api/auth/login", () => {
-    it("should return 404 status for wrong user", async () => {
-      const res = await request(server)
-        .post("/api/auth/login")
-        .send({
-          username: "lizdoyle",
-          password: "pass"
-        })
-        .set("Content-Type", "application/json");
-      expect(res.status).toBe(404);
-      expect(res.body.message).toBe("Cannot find username or password!");
-    });
-
-    // it("should return 200 status", async () => {
-    //   const password = bcrypt.hashSync("password", 12)
-    //   await db("users").insert([{ username: "hannah", password: "pass" }]);
-    //   const res = await request(server)
-    //     .post("/api/auth/login")
-    //     .send({
-    //       username: "hannah",
-    //       password: "pass"
-    //     })
-    //     .set("Content-Type", "application/json");
-    //   expect(res.status).toBe(200);
-    // }, 10000);
-  });
-
   describe("POST /api/auth/register", () => {
     it("should return 201 status", async () => {
       return request(server)
@@ -84,8 +57,37 @@ describe("server", () => {
           expect(res.body.message).toBe("Please enter username and password");
         });
     }, 10000);
-  
+
   });
+
+  describe("POST /api/auth/login", () => {
+    it("should return 404 status for wrong user", async () => {
+      const res = await request(server)
+        .post("/api/auth/login")
+        .send({
+          username: "lizdoyle",
+          password: "pass"
+        })
+        .set("Content-Type", "application/json");
+      expect(res.status).toBe(404);
+      expect(res.body.message).toBe("Cannot find username or password!");
+    });
+
+    it("should return 200 status", async () => {
+      const password = bcrypt.hashSync("password", 12)
+      await db("users").insert([{ username: "lizdoyle", password: "test"}]);
+      const res = await request(server)
+        .post("/api/auth/login")
+        .send({
+          username: "lizdoyle",
+          password: "test"
+        })
+        .set("Content-Type", "application/json");
+      expect(res.status).toBe(200);
+    }, 10000);
+  });
+
+  
   describe("GET /api/jokes", () => {
 
     it("should accept token", async () => {
