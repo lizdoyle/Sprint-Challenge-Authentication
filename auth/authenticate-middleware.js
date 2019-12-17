@@ -5,14 +5,17 @@
 
 const jwt = require('jsonwebtoken');
 
-const secrets = require('../config/secrets');
+const secrets = require('../config/secrets.js');
 
 
 module.exports = (req, res, next) => {
 
   const token = req.headers.authorization;
 
-  //console.log(token);
+// console.log(req.headers.authorization)
+
+  console.log(req.decodedJwt
+    );
 
   if (req.decodedJwt) {
     next();
@@ -28,7 +31,7 @@ module.exports = (req, res, next) => {
            })
           } 
         else {
-            req.status(401).json({message: "invalid token or no token provided"})
+            res.status(401).json({message: "invalid token or no token provided"})
         }
      
 }
